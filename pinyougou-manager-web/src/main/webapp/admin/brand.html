@@ -14,98 +14,10 @@
     <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
 	<script src="../plugins/angularJs/angular.min.js"></script>
 	<script src="../plugins/angularJs/pagination.js"></script>
-	<script>
-		
-		var app = angular.module('pinyougou',['pagination']);
-		app.controller('brandController',function ($scope,$http) {
-			$scope.findAll = function () {
-				$http.get('/brand/findAll.do').success(function (response) {
-					$scope.list = response;
-                })
-            };
-
-            $scope.paginationConf = {
-                currentPage: 1,
-                totalItems: 10,
-                itemsPerPage: 10,
-                perPageOptions: [5, 8, 10, 12, 15],
-                onChange: function(){
-                    $scope.reloadList();//重新加载
-                }
-            };
-
-			//刷新列表
-			$scope.reloadList = function() {
-                $scope.search($scope.paginationConf.currentPage,$scope.paginationConf.itemsPerPage);
-			};
-
-			//分页查询
-			$scope.findPage = function (pageNum,pageSize) {
-				$http.get('/brand/findPage.do?pageNum='+pageNum+'&pageSize='+pageSize)
-					.success(function (response) {
-						$scope.list = response.rows;
-						$scope.paginationConf.totalItems = response.total;
-                    })
-            };
-
-            //新增
-            $scope.save = function () {
-			    var method = 'add';
-			    if ($scope.entity.id != null) {
-			        method = 'update';
-				}
-				$http.post('/brand/'+method+'.do',$scope.entity).success(function (response) {
-					if (response.success) {
-					    $scope.reloadList();
-					} else {
-					    alert(response.message);
-					}
-                })
-            }
-
-            //修改-先查找
-            $scope.findOne = function (id) {
-				$http.get('/brand/findOne.do?id='+id).success(function (response) {
-					$scope.entity = response;
-                })
-            };
-
-            $scope.selectIds = [];
-			$scope.updateSelection = function ($event,id) {
-			    if ($event.target.checked) {
-                    $scope.selectIds.push(id);
-                } else {
-			        var index = $scope.selectIds.indexOf(id);
-			        $scope.selectIds.splice(index,1);
-				}
-            };
-			//删除
-            $scope.del = function () {
-				if (confirm('确定要删除吗？')) {
-                    $http.get('/brand/delete.do?ids=' + $scope.selectIds)
-                        .success(function (response) {
-                            if (response.success) {
-                                $scope.reloadList();
-                            } else {
-                                alert(response.message)
-                            }
-                        })
-				}
-            };
-
-            $scope.searchEntity = {};
-            $scope.search = function (pageNum,pageSize) {
-                $http.post('/brand/search.do?pageNum='+pageNum+'&pageSize='+pageSize,$scope.searchEntity)
-                    .success(function (response) {
-                        $scope.list = response.rows;
-                        $scope.paginationConf.totalItems = response.total;
-                    })
-            }
-
-        })
-		
-	</script>
-
+	<script src="/js/base_pagination.js"></script>
+	<script src="/js/service/brandService.js"></script>
+	<script src="/js/controller/baseController.js"></script>
+	<script src="/js/controller/brandController.js"></script>
     
 </head>
 <body class="hold-transition skin-red sidebar-mini" ng-app="pinyougou" ng-controller="brandController" ng-init="findAll()">

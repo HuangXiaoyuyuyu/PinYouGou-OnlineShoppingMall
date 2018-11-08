@@ -18,11 +18,13 @@ public class BrandController {
     @Reference
     private BrandService brandService;
 
+    //查询所有品牌
     @RequestMapping("/findAll")
     public List<TbBrand> findAll() {
         return brandService.findAll();
     }
 
+    //分页查询
     @RequestMapping("/findPage")
     public PageResult findPage(int pageNum, int pageSize) {
         return brandService.findpage(pageNum,pageSize);

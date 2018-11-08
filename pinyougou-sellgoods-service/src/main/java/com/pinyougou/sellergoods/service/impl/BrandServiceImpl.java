@@ -9,8 +9,6 @@ import com.pinyougou.pojo.TbBrandExample;
 import com.pinyougou.sellergoods.service.BrandService;
 import entity.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-
 import java.util.List;
 
 @Service
@@ -29,6 +27,7 @@ public class BrandServiceImpl implements BrandService {
 
         PageHelper.startPage(pageNum,pageSize);
         Page<TbBrand> result = (Page<TbBrand>) brandMapper.selectByExample(null);
+
         return new PageResult(result.getTotal(),result.getResult());
     }
 
