@@ -1,5 +1,5 @@
  //控制层 
-app.controller('typeTemplateController' ,function($scope,$controller   ,typeTemplateService){	
+app.controller('typeTemplateController' ,function($scope,$controller,typeTemplateService,brandService,specificationService){
 	
 	$controller('baseController',{$scope:$scope});//继承
 	
@@ -10,7 +10,7 @@ app.controller('typeTemplateController' ,function($scope,$controller   ,typeTemp
 				$scope.list=response;
 			}			
 		);
-	}    
+	} ;
 	
 	//分页
 	$scope.findPage=function(page,rows){			
@@ -20,16 +20,19 @@ app.controller('typeTemplateController' ,function($scope,$controller   ,typeTemp
 				$scope.paginationConf.totalItems=response.total;//更新总记录数
 			}			
 		);
-	}
+	};
 	
 	//查询实体 
 	$scope.findOne=function(id){				
 		typeTemplateService.findOne(id).success(
 			function(response){
-				$scope.entity= response;					
+				$scope.entity= response;
+				$scope.entity.brandIds = JSON.parse($scope.entity.brandIds);
+				$scope.entity.specIds = JSON.parse($scope.entity.specIds);
+				$scope.entity.customAttributeItems = JSON.parse($scope.entity.customAttributeItems);
 			}
 		);				
-	}
+	};
 	
 	//保存 
 	$scope.save=function(){				
@@ -49,7 +52,7 @@ app.controller('typeTemplateController' ,function($scope,$controller   ,typeTemp
 				}
 			}		
 		);				
-	}
+	};
 	
 	 
 	//批量删除 
@@ -63,7 +66,7 @@ app.controller('typeTemplateController' ,function($scope,$controller   ,typeTemp
 				}						
 			}		
 		);				
-	}
+	};
 	
 	$scope.searchEntity={};//定义搜索对象 
 	
@@ -75,6 +78,33 @@ app.controller('typeTemplateController' ,function($scope,$controller   ,typeTemp
 				$scope.paginationConf.totalItems=response.total;//更新总记录数
 			}			
 		);
-	}
+	};
+
+    //品牌列表
+    $scope.brandList={data:[]};
     
+    $scope.selectBrandList = function () {
+        brandService.selectOptionList().success(
+            function (response) {
+                $scope.brandList = {data:response}
+            }
+        )
+    };
+
+    $scope.specificationList={data:[]};
+    $scope.selectSpecificationList = function () {
+		specificationService.selectOptionList().success(
+			function (response) {
+				$scope.specificationList = {data:response}
+            }
+		)
+    };
+    
+    $scope.addTableRow = function () {
+		$scope.entity.customAttributeItems.push({});
+    };
+
+    $scope.deleTableRow = function (index) {
+		$scope.entity.customAttributeItems.splice(index,1);
+    };
 });	
