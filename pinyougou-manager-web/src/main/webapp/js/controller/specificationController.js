@@ -30,8 +30,7 @@ app.controller('specificationController' ,function($scope,$controller,specificat
 			}
 		);				
 	};
-	
-	//保存 
+
 	$scope.save=function(){				
 		var serviceObject;//服务层对象  				
 		if($scope.entity.specification.id!=null){//如果有ID
