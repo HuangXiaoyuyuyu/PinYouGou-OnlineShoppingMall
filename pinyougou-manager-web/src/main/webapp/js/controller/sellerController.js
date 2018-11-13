@@ -1,5 +1,5 @@
  //控制层 
-app.controller('sellerController' ,function($scope,$controller   ,sellerService){	
+app.controller('sellerController' ,function($scope,$controller,sellerService){
 	
 	$controller('baseController',{$scope:$scope});//继承
 	
@@ -10,7 +10,7 @@ app.controller('sellerController' ,function($scope,$controller   ,sellerService)
 				$scope.list=response;
 			}			
 		);
-	}    
+	};   
 	
 	//分页
 	$scope.findPage=function(page,rows){			
@@ -20,7 +20,7 @@ app.controller('sellerController' ,function($scope,$controller   ,sellerService)
 				$scope.paginationConf.totalItems=response.total;//更新总记录数
 			}			
 		);
-	}
+	};
 	
 	//查询实体 
 	$scope.findOne=function(id){				
@@ -29,7 +29,7 @@ app.controller('sellerController' ,function($scope,$controller   ,sellerService)
 				$scope.entity= response;					
 			}
 		);				
-	}
+	};
 	
 	//保存 
 	$scope.save=function(){				
@@ -49,9 +49,8 @@ app.controller('sellerController' ,function($scope,$controller   ,sellerService)
 				}
 			}		
 		);				
-	}
+	};
 	
-	 
 	//批量删除 
 	$scope.dele=function(){			
 		//获取选中的复选框			
@@ -63,7 +62,7 @@ app.controller('sellerController' ,function($scope,$controller   ,sellerService)
 				}						
 			}		
 		);				
-	}
+	};
 	
 	$scope.searchEntity={};//定义搜索对象 
 	
@@ -75,6 +74,19 @@ app.controller('sellerController' ,function($scope,$controller   ,sellerService)
 				$scope.paginationConf.totalItems=response.total;//更新总记录数
 			}			
 		);
-	}
+	};
+	
+	//更新商家状态
+    $scope.updateStatus = function (sellerId,status) {
+        sellerService.updateStatus(sellerId,status).success(
+            function (response) {
+                if (response.success) {
+                    $scope.reloadList();
+                } else {
+                    alert(response.message);
+                }
+            }
+        )
+    }
     
 });	
