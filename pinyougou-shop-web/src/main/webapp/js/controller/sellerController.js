@@ -90,6 +90,15 @@ app.controller('sellerController' ,function($scope,$controller,sellerService){
 				$scope.paginationConf.totalItems=response.total;//更新总记录数
 			}			
 		);
-	}
+	};
+
+	//显示名字
+	$scope.showName = function () {
+		sellerService.showName().success(
+			function (response) {
+				$scope.loginName = response.loginName;
+            }
+		)
+    }
     
 });	
