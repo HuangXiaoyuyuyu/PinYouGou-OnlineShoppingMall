@@ -1,5 +1,6 @@
 package com.pinyougou.manager.controller;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -90,18 +91,13 @@ public class ItemCatController {
 	 */
 	@RequestMapping("/delete")
 	public Result delete(Long [] ids){
-		try {
-			itemCatService.delete(ids);
-			return new Result(true, "删除成功"); 
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Result(false, "删除失败");
-		}
+			Result result = itemCatService.delete(ids);
+			return result;
 	}
 	
 		/**
 	 * 查询+分页
-	 * @param brand
+	 * @param
 	 * @param page
 	 * @param rows
 	 * @return
@@ -109,6 +105,19 @@ public class ItemCatController {
 	@RequestMapping("/search")
 	public PageResult search(@RequestBody TbItemCat itemCat, int page, int rows  ){
 		return itemCatService.findPage(itemCat, page, rows);		
+	}
+
+	/**
+	 * 根据parentId查找
+	 */
+	@RequestMapping("/findByParentId")
+	public List<TbItemCat> findByParentId(Long parentId) {
+		return itemCatService.findByParentId(parentId);
+	}
+
+	@RequestMapping("/selectOptionList")
+	public  List<Map> selectOptionList() {
+		return itemCatService.selectOptionList();
 	}
 	
 }

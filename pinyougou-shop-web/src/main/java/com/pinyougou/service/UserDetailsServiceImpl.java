@@ -32,7 +32,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_SELLER"));
 
         TbSeller seller = sellerService.findOne(username);
-        System.out.println(seller.getSellerId()+","+seller.getPassword());
+
         if (seller != null) {
             if (seller.getStatus().equals("1")) {
                 return new User(username,seller.getPassword(),grantedAuthorities);
