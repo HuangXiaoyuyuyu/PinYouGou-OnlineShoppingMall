@@ -1,5 +1,5 @@
  //控制层 
-app.controller('goodsController' ,function($scope,$controller   ,goodsService){	
+app.controller('goodsController' ,function($scope,$controller,goodsService){
 	
 	$controller('baseController',{$scope:$scope});//继承
 	
@@ -10,7 +10,7 @@ app.controller('goodsController' ,function($scope,$controller   ,goodsService){
 				$scope.list=response;
 			}			
 		);
-	}    
+	};
 	
 	//分页
 	$scope.findPage=function(page,rows){			
@@ -20,7 +20,7 @@ app.controller('goodsController' ,function($scope,$controller   ,goodsService){
 				$scope.paginationConf.totalItems=response.total;//更新总记录数
 			}			
 		);
-	}
+	};
 	
 	//查询实体 
 	$scope.findOne=function(id){				
@@ -29,7 +29,7 @@ app.controller('goodsController' ,function($scope,$controller   ,goodsService){
 				$scope.entity= response;					
 			}
 		);				
-	}
+	};
 	
 	//保存 
 	$scope.save=function(){				
@@ -49,9 +49,26 @@ app.controller('goodsController' ,function($scope,$controller   ,goodsService){
 				}
 			}		
 		);				
-	}
+	};
 	
-	 
+
+	//add
+    //保存
+    $scope.add=function(){
+    	$scope.entity.tbGoodsDesc.introduction = editor.html();
+        goodsService.add( $scope.entity).success(
+            function(response){
+                if(response.success){
+                    alert("添加成功");
+					$scope.entity = {};
+					editor.html("");
+                }else{
+                    alert(response.message);
+                }
+            }
+        );
+    };
+
 	//批量删除 
 	$scope.dele=function(){			
 		//获取选中的复选框			
@@ -63,7 +80,7 @@ app.controller('goodsController' ,function($scope,$controller   ,goodsService){
 				}						
 			}		
 		);				
-	}
+	};
 	
 	$scope.searchEntity={};//定义搜索对象 
 	
