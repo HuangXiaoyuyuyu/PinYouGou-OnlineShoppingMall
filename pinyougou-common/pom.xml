@@ -11,5 +11,16 @@
     <packaging>jar</packaging>
     <artifactId>pinyougou-common</artifactId>
 
+    <dependencies>
+        <!-- 文件上传组件 -->
+        <dependency>
+            <groupId>org.csource.fastdfs</groupId>
+            <artifactId>fastdfs</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>
