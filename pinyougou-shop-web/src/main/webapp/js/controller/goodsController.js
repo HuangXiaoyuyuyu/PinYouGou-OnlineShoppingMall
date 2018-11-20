@@ -1,5 +1,5 @@
  //控制层 
-app.controller('goodsController' ,function($scope,$controller,goodsService,uploadService){
+app.controller('goodsController' ,function($scope,$controller,goodsService,itemCatService,uploadService){
 	
 	$controller('baseController',{$scope:$scope});//继承
 	
@@ -114,5 +114,41 @@ app.controller('goodsController' ,function($scope,$controller,goodsService,uploa
 
     $scope.remove_image_entity = function (index) {
         $scope.entity.tbGoodsDesc.itemImages.splice(index,1);
-    }
+    };
+
+    //读取一级分类
+	$scope.selectItemCat1List = function () {
+		itemCatService.findByParentId(0).success(
+			function (response) {
+				$scope.itemCat1List = response;
+            }
+		)
+    };
+
+    //读取二级分类下拉框
+	$scope.$watch('entity.tbGoods.category1Id',function (newValue,oldValue) {
+            itemCatService.findByParentId(newValue).success(
+                function (response) {
+                    $scope.itemCat2List = response;
+                }
+            )
+    });
+
+    //读取三级分类下拉框
+    $scope.$watch('entity.tbGoods.category2Id',function (newValue,oldValue) {
+        itemCatService.findByParentId(newValue).success(
+            function (response) {
+                $scope.itemCat3List = response;
+            }
+        )
+    });
+
+    //读取模板ID
+    $scope.$watch('entity.tbGoods.category3Id',function (newValue,oldValue) {
+        itemCatService.findOne(newValue).success(
+            function (response) {
+                $scope.entity.tbGoods.typeTemplateId = response.typeId;
+            }
+        )
+    })
 });	
