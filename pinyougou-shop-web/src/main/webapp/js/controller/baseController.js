@@ -35,6 +35,16 @@ app.controller("baseController",function ($scope) {
             value += json[i][key];
         }
         return value;
+    };
+
+    //在list集合中根据某key的值 查询对象
+    $scope.searchObjectByKey = function (list,key,keyValue) {
+        for (var i=0; i<list.length; i++) {
+            if (list[i][key] == keyValue) {
+                return list[i];
+            }
+        }
+        return null;
     }
 
 });

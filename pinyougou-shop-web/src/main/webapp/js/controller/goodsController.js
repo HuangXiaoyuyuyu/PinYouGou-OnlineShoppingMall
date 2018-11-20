@@ -106,7 +106,7 @@ app.controller('goodsController' ,function($scope,$controller,goodsService,itemC
         })
     };
 
-    $scope.entity = {tbGoods:{},tbGoodsDesc:{itemImages:[]}};
+    $scope.entity = {tbGoods:{},tbGoodsDesc:{itemImages:[],specificationItems:[]}};
 
     $scope.add_image_entity = function () {
         $scope.entity.tbGoodsDesc.itemImages.push($scope.image_entity);
@@ -170,5 +170,24 @@ app.controller('goodsController' ,function($scope,$controller,goodsService,itemC
             }
 		)
     });
+
+	$scope.updateSpecAttribute = function ($event,name,value) {
+		var object = $scope.searchObjectByKey($scope.entity.tbGoodsDesc.specificationItems,'attributeName',name);
+		if (object != null) {
+			if ($event.target.checked) {
+                object.attributeValue.push(value);
+			} else {//取消勾选
+				object.attributeValue.splice(object.attributeValue.indexOf(value),1);
+				//如果选项都取消，将记录移除
+				if (object.attributeValue.length == 0) {
+                    $scope.entity.tbGoodsDesc.specificationItems.splice(
+                    	$scope.entity.tbGoodsDesc.specificationItems.indexOf(object),1);
+				}
+			}
+		} else {
+            $scope.entity.tbGoodsDesc.specificationItems.push(
+                {"attributeName":name,"attributeValue":[value]});
+		}
+    }
 
 });	
