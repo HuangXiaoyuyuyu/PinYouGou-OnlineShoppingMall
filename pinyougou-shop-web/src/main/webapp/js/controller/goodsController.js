@@ -161,6 +161,13 @@ app.controller('goodsController' ,function($scope,$controller,goodsService,itemC
                 //根据模板ID 更新模板对象
                 $scope.entity.tbGoodsDesc.customAttributeItems = JSON.parse($scope.typeTemplate.customAttributeItems);
             }
+		);
+
+		//查询规格列表
+		typeTemplateService.findSpecList(newValue).success(
+			function (response) {
+				$scope.specList = response;
+            }
 		)
     });
 
