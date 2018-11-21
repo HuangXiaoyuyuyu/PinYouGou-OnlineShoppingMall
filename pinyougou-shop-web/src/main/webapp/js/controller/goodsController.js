@@ -192,13 +192,13 @@ app.controller('goodsController' ,function($scope,$controller,goodsService,itemC
 
     $scope.createItemList = function () {
         //列表初始化
-        $scope.entity.itemList = [{spec:{},price:0,num:99999,status:'0',isDefault:'0'}];
+        $scope.entity.tbItems = [{spec:{},price:0,num:99999,status:'0',isDefault:'0'}];
 
         var items = $scope.entity.tbGoodsDesc.specificationItems;
 
         for (var i=0; i<items.length; i++) {
 
-            $scope.entity.itemList = addColumn($scope.entity.itemList,items[i].attributeName,items[i].attributeValue);
+            $scope.entity.tbItems = addColumn($scope.entity.tbItems,items[i].attributeName,items[i].attributeValue);
 
         }
     };
