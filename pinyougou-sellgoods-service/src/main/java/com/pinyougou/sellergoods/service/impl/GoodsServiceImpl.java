@@ -70,29 +70,7 @@ public class GoodsServiceImpl implements GoodsService {
 		goods.getTbGoodsDesc().setGoodsId(goods.getTbGoods().getId());
 		goodsDescMapper.insert(goods.getTbGoodsDesc());//插入商品扩展数据
 
-		if ("1".equals(goods.getTbGoods().getIsEnableSpec())) {
-			for (TbItem item : goods.getTbItems()) {
-				//标题
-				String title = goods.getTbGoods().getGoodsName();
-				Map<String,Object> specMap = JSON.parseObject(item.getSpec());
-				for (String key : specMap.keySet()) {
-					title += " " + specMap.get(key);
-				}
-				item.setTitle(title);
-				setItemValues(goods,item);
-				itemMapper.insert(item);
-			}
-		} else {
-			TbItem item = new TbItem();
-			item.setTitle(goods.getTbGoods().getGoodsName());//商品KPU+规格描述串作为SKU名称
-			item.setPrice( goods.getTbGoods().getPrice() );//价格
-			item.setStatus("1");//状态
-			item.setIsDefault("1");//是否默认
-			item.setNum(99999);//库存数量
-			item.setSpec("{}");
-			setItemValues(goods,item);
-			itemMapper.insert(item);
-		}
+		saveItemList(goods);
 	}
 
 	private void setItemValues(Goods goods, TbItem item) {
@@ -123,13 +101,51 @@ public class GoodsServiceImpl implements GoodsService {
 
 	}
 
+	//插入SKU列表数据
+	private void saveItemList(Goods goods) {
+		if ("1".equals(goods.getTbGoods().getIsEnableSpec())) {
+			for (TbItem item : goods.getTbItems()) {
+				//标题
+				String title = goods.getTbGoods().getGoodsName();
+				Map<String,Object> specMap = JSON.parseObject(item.getSpec());
+				for (String key : specMap.keySet()) {
+					title += " " + specMap.get(key);
+				}
+				item.setTitle(title);
+				setItemValues(goods,item);
+				itemMapper.insert(item);
+			}
+		} else {
+			TbItem item = new TbItem();
+			item.setTitle(goods.getTbGoods().getGoodsName());//商品KPU+规格描述串作为SKU名称
+			item.setPrice( goods.getTbGoods().getPrice() );//价格
+			item.setStatus("1");//状态
+			item.setIsDefault("1");//是否默认
+			item.setNum(99999);//库存数量
+			item.setSpec("{}");
+			setItemValues(goods,item);
+			itemMapper.insert(item);
+		}
+	}
 	
 	/**
 	 * 修改
 	 */
 	@Override
-	public void update(TbGoods goods){
-		goodsMapper.updateByPrimaryKey(goods);
+	public void update(Goods goods){
+		//更新基本表数据
+		goodsMapper.updateByPrimaryKey(goods.getTbGoods());
+		//更新扩展表数据
+		goodsDescMapper.updateByPrimaryKey(goods.getTbGoodsDesc());
+
+		//删除原有SKU列表数据
+		TbItemExample example = new TbItemExample();
+		TbItemExample.Criteria criteria = example.createCriteria();
+		criteria.andGoodsIdEqualTo(goods.getTbGoods().getId());
+		itemMapper.deleteByExample(example);
+
+		//插入新的SKU列表数据
+		saveItemList(goods);
 	}	
 	
 	/**
