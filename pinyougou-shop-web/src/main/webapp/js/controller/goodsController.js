@@ -216,6 +216,19 @@ app.controller('goodsController' ,function($scope,$controller,goodsService,itemC
         } 
         
         return newList;
+    };
+
+    $scope.status=['未审核','已审核','审核未通过','关闭'];
+
+    $scope.itemCatList = [];
+    $scope.findItemList = function () {
+        itemCatService.findAll().success(
+            function (response) {
+                for (var i=0; i<response.length; i++) {
+                    $scope.itemCatList[i] = response[i].name;
+                }
+            }
+        )
     }
 
 });	
