@@ -1,5 +1,5 @@
  //控制层 
-app.controller('goodsController' ,function($scope,$controller,goodsService,itemCatService,typeTemplateService,uploadService){
+app.controller('goodsController' ,function($scope,$controller,$location,goodsService,itemCatService,typeTemplateService,uploadService){
 	
 	$controller('baseController',{$scope:$scope});//继承
 	
@@ -23,13 +23,29 @@ app.controller('goodsController' ,function($scope,$controller,goodsService,itemC
 	};
 	
 	//查询实体 
-	$scope.findOne=function(id){				
+	$scope.findOne = function() {
+		var id = $location.search()['id'];//获取参数值
+		if (id == null) {
+			return ;
+		} 
 		goodsService.findOne(id).success(
-			function(response){
-				$scope.entity= response;					
-			}
-		);				
-	};
+			function (response) {
+				$scope.entity = response;
+				//回显富文本编辑器的商品介绍
+				editor.html($scope.entity.tbGoodsDesc.introduction);
+				//显示图片列表
+				$scope.entity.tbGoodsDesc.itemImages = JSON.parse($scope.entity.tbGoodsDesc.itemImages);
+				//显示商品扩展属性
+				$scope.entity.tbGoodsDesc.customAttributeItems = JSON.parse($scope.entity.tbGoodsDesc.customAttributeItems);
+				//显示规格
+				$scope.entity.tbGoodsDesc.specificationItems = JSON.parse($scope.entity.tbGoodsDesc.specificationItems);
+				//转换SKU列表中的规格对象
+				for (var i=0; i<$scope.entity.tbItems.length; i++) {
+					$scope.entity.tbItems[i].spec = JSON.parse($scope.entity.tbItems[i].spec);
+				}
+            }
+		)
+	};	
 	
 	//保存 
 	$scope.save=function(){				
@@ -159,7 +175,9 @@ app.controller('goodsController' ,function($scope,$controller,goodsService,itemC
 				$scope.typeTemplate = response;//获取类型模板
 				$scope.typeTemplate.brandIds = JSON.parse($scope.typeTemplate.brandIds);//品牌列表
                 //根据模板ID 更新模板对象
-                $scope.entity.tbGoodsDesc.customAttributeItems = JSON.parse($scope.typeTemplate.customAttributeItems);
+				if ($location.search()['id'] == null) {
+                    $scope.entity.tbGoodsDesc.customAttributeItems = JSON.parse($scope.typeTemplate.customAttributeItems);
+                }
             }
 		);
 
@@ -229,6 +247,20 @@ app.controller('goodsController' ,function($scope,$controller,goodsService,itemC
                 }
             }
         )
-    }
+    };
+
+    $scope.checkAttributeValue = function (specName,optionName) {
+    	var items = $scope.entity.tbGoodsDesc.specificationItems;
+    	var object = $scope.searchObjectByKey(items,'attributeName',specName);
+    	if (object != null) {
+            if (object.attributeValue.indexOf(optionName) >= 0) {
+                return true;
+            }else {
+                return false;
+            }
+		} else {
+    		return false;
+		}
+    };
 
 });	
