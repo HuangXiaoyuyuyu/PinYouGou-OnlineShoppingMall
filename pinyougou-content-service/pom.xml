@@ -9,17 +9,17 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>pinyougou-manager-web</artifactId>
+    <artifactId>pinyougou-content-service</artifactId>
     <packaging>war</packaging>
 
-    <name>pinyougou-manager-web Maven Webapp</name>
+    <name>pinyougou-content-service Maven Webapp</name>
     <!-- FIXME change it to the project's website -->
     <url>http://www.example.com</url>
 
     <dependencies>
         <dependency>
             <groupId>com.pinyougou</groupId>
-            <artifactId>pinyougou-sellgoods-interface</artifactId>
+            <artifactId>pinyougou-dao</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
@@ -60,15 +60,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-        </dependency>
-        <!-- 身份验证 -->
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-config</artifactId>
         </dependency>
         <!-- dubbo相关 -->
         <dependency>
@@ -112,6 +103,7 @@
             <artifactId>servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
+
     </dependencies>
 
     <build>
@@ -122,7 +114,7 @@
                 <version>2.2</version>
                 <configuration>
                     <!-- 指定端口 -->
-                    <port>9101</port>
+                    <port>9002</port>
                     <!-- 请求路径 -->
                     <path>/</path>
                 </configuration>

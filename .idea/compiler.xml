@@ -8,6 +8,8 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="pinyougou-common" />
+        <module name="pinyougou-content-interface" />
+        <module name="pinyougou-content-service" />
         <module name="pinyougou-dao" />
         <module name="pinyougou-manager-web" />
         <module name="pinyougou-pojo" />
