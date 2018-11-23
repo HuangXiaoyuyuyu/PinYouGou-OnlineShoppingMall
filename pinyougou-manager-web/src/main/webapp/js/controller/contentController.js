@@ -100,6 +100,8 @@ app.controller('contentController' ,function($scope,$controller,uploadService,co
 				$scope.contentCategoryList = response;
             }
 		)
-    }
+    };
+
+    $scope.status=["无效","有效"];
     
 });	
