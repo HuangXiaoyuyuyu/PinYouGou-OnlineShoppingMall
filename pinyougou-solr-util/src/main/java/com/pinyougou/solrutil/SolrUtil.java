@@ -1,5 +1,6 @@
 package com.pinyougou.solrutil;
 
+import com.alibaba.fastjson.JSON;
 import com.pinyougou.mapper.TbItemMapper;
 import com.pinyougou.pojo.TbItem;
 import com.pinyougou.pojo.TbItemExample;
@@ -10,6 +11,7 @@ import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author OliverYu
@@ -34,6 +36,9 @@ public class SolrUtil {
         System.out.println("---商品列表---");
         for (TbItem tbItem : tbItems) {
             System.out.println(tbItem.getId()+" "+tbItem.getTitle()+" "+tbItem.getPrice());
+
+            Map map = JSON.parseObject(tbItem.getSpec(), Map.class);
+            tbItem.setSpecMap(map);
         }
 
         solrTemplate.saveBeans(tbItems);
