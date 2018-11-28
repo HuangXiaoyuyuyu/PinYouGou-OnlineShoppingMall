@@ -11,8 +11,9 @@
 
     <artifactId>pinyougou-solr-util</artifactId>
 
-    <dependencies>
 
+
+    <dependencies>
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -41,7 +42,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
-        </dependency>e
+        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
@@ -59,5 +60,7 @@
         </dependency>
 
     </dependencies>
+
+
 
 </project>
