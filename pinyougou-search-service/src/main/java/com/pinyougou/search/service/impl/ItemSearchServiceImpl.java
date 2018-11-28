@@ -4,12 +4,12 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.pinyougou.pojo.TbItem;
 import com.pinyougou.search.service.ItemSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.data.solr.core.query.*;
-import org.springframework.data.solr.core.query.result.HighlightEntry;
-import org.springframework.data.solr.core.query.result.HighlightPage;
-import org.springframework.data.solr.core.query.result.ScoredPage;
+import org.springframework.data.solr.core.query.result.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +25,12 @@ public class ItemSearchServiceImpl implements ItemSearchService {
     @Autowired
     SolrTemplate solrTemplate;
 
-    public Map searchList(Map searchMap) {
+    /**
+     * 查询列表
+     * @param searchMap
+     * @return
+     */
+    private Map searchList(Map searchMap) {
         Map map = new HashMap();
         /*Query query = new SimpleQuery("*:*");
         Criteria criteria = new Criteria("item_keywords").is(searchMap.get("keywords"));
@@ -69,10 +74,48 @@ public class ItemSearchServiceImpl implements ItemSearchService {
         return map;
     }
 
+    /**
+     * 分组查询(查询商品分类列表)
+     * @return
+     */
+    private List searchCategoryList(Map searchMap) {
+        List list = new ArrayList();
+
+        Query query = new SimpleQuery("*:*");
+        //关键字查询 相当于sql的where条件
+        Criteria criteria = new Criteria("item_keywords").is(searchMap.get("keywords"));
+        query.addCriteria(criteria);
+
+        //设置分组选项   相当于sql的group by
+        GroupOptions groupOptions = new GroupOptions().addGroupByField("item_category");
+        query.setGroupOptions(groupOptions);
+
+        //分组页
+        GroupPage<TbItem> page = solrTemplate.queryForGroupPage(query, TbItem.class);
+
+        //获取分组结果对象
+        GroupResult<TbItem> groupResult = page.getGroupResult("item_category");
+
+        //获取分组入口页
+        Page<GroupEntry<TbItem>> groupEntries = groupResult.getGroupEntries();
+
+        //获取分组入口集合
+        List<GroupEntry<TbItem>> entryList = groupEntries.getContent();
+
+        for (GroupEntry<TbItem> entry : entryList) {
+            list.add(entry.getGroupValue());//将分组的结果添加到返回值中
+        }
+        return list;
+    }
+
     @Override
     public Map search(Map searchMap) {
         Map map = new HashMap();
+        //1.查询列表
         map.putAll(searchList(searchMap));
+        //2.分组查询 商品分类列表
+        List categoryList = searchCategoryList(searchMap);
+        map.put("categoryList",categoryList);
         return map;
     }
 }
