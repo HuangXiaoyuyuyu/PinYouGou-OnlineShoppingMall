@@ -18,7 +18,7 @@ import java.util.Map;
  * @Date 2018/11/28 10:25
  * @Description TODO
  */
-@Service
+@Service(timeout = 5000)
 public class ItemSearchServiceImpl implements ItemSearchService {
 
     @Autowired
