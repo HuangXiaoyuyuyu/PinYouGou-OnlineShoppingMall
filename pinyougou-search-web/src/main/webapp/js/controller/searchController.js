@@ -1,7 +1,7 @@
 app.controller("searchController",function ($scope,searchService) {
 
     //搜索对象
-    $scope.searchMap = {'keywords':'','category':'','brand':'','spec':{},'price':'','pageNo':1,'pageSize':10};
+    $scope.searchMap = {'keywords':'','category':'','brand':'','spec':{},'price':'','pageNo':1,'pageSize':10,'sort':'','sortField':''};
 
     $scope.search = function () {
         $scope.searchMap.pageNo = parseInt($scope.searchMap.pageNo);

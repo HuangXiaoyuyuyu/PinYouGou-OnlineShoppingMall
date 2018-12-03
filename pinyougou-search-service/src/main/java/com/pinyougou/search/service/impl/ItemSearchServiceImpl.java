@@ -5,6 +5,7 @@ import com.pinyougou.pojo.TbItem;
 import com.pinyougou.search.service.ItemSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.data.solr.core.query.*;
@@ -108,6 +109,20 @@ public class ItemSearchServiceImpl implements ItemSearchService {
         query.setOffset((pageNo-1)*pageSize);
         query.setRows(pageSize);//设置页大小 每页记录数
 
+        //1.7按价格排序
+        String sortValue = (String) searchMap.get("sort");//升序ASC降序DESC
+        String sortField = (String) searchMap.get("sortField");//排序字段
+        if (sortValue != null && !sortValue.equals("")) {
+            if (sortValue.equalsIgnoreCase("ASC")) {
+                Sort sort = new Sort(Sort.Direction.ASC,"item_"+sortField);
+                query.addSort(sort);
+            }
+            if (sortValue.equalsIgnoreCase("DESC")){
+                Sort sort = new Sort(Sort.Direction.DESC,"item_"+sortField);
+                query.addSort(sort);
+            }
+
+        }
         //高亮页对象
         HighlightPage<TbItem> page = solrTemplate.queryForHighlightPage(query, TbItem.class);
 
@@ -188,6 +203,9 @@ public class ItemSearchServiceImpl implements ItemSearchService {
     @Override
     public Map search(Map searchMap) {
         Map map = new HashMap();
+        //空格处理
+        String keywords = (String) searchMap.get("keywords");
+        searchMap.put("keywords",keywords.replace(" ",""));
         //1.查询列表
         map.putAll(searchList(searchMap));
         //2.分组查询 商品分类列表
