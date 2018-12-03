@@ -63,6 +63,13 @@ app.controller("searchController",function ($scope,searchService) {
             return false;
         }
     };
+
+    $scope.sortSearch = function(sortField,sortValue) {
+        $scope.searchMap.sortField = sortField;
+        $scope.searchMap.sort = sortValue;
+        $scope.search();
+    };
+
     //添加搜索项
     $scope.addSearchItem = function (key,value) {
         if (key == 'category' || key == 'brand' || key == 'price') {

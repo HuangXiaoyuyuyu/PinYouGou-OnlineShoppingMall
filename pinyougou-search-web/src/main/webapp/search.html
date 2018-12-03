@@ -255,20 +255,23 @@
 					<div class="navbar-inner filter">
 						<ul class="sui-nav">
 							<li class="active">
-								<a href="#">综合</a>
+								<a href="#" ng-click="sortSearch('','')">综合</a>
 							</li>
 							<li>
 								<a href="#">销量</a>
 							</li>
 							<li>
-								<a href="#">新品</a>
+								<a href="#" ng-click="sortSearch('updatetime','DESC')">新品</a>
 							</li>
 							<li>
 								<a href="#">评价</a>
 							</li>
 							<li>
-								<a href="#">价格</a>
+								<a href="#" ng-click="sortSearch('price','ASC')">价格↑</a>
 							</li>
+                            <li>
+                                <a href="#" ng-click="sortSearch('price','DESC')">价格↓</a>
+                            </li>
 						</ul>
 					</div>
 				</div>
