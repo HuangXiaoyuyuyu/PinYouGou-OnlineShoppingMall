@@ -229,4 +229,13 @@ public class ItemSearchServiceImpl implements ItemSearchService {
         solrTemplate.saveBeans(list);
         solrTemplate.commit();
     }
+
+    @Override
+    public void deleteByGoodsIds(List goodsIds) {
+        Query query = new SimpleQuery("*:*");
+        Criteria criteria = new Criteria("item_goodsid").in(goodsIds);
+        query.addCriteria(criteria);
+        solrTemplate.delete(query);
+        solrTemplate.commit();
+    }
 }

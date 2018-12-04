@@ -1,4 +1,5 @@
 package com.pinyougou.manager.controller;
+import java.util.Arrays;
 import java.util.List;
 
 import com.pinyougou.pojo.TbItem;
@@ -84,6 +85,9 @@ public class GoodsController {
 	public Result delete(Long [] ids){
 		try {
 			goodsService.delete(ids);
+
+			//从索引中删除
+			itemSearchService.deleteByGoodsIds(Arrays.asList(ids));
 			return new Result(true, "删除成功"); 
 		} catch (Exception e) {
 			e.printStackTrace();
