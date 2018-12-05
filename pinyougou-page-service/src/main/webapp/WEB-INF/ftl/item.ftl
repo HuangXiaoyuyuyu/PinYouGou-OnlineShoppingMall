@@ -131,7 +131,6 @@
 							</div>
 						</div>
 					</div>
-					{{specificationItem}}
 					<div class="clearfix choose">
 						<div id="specification" class="summary-wrap clearfix">
 							<#list specficationList as item>
