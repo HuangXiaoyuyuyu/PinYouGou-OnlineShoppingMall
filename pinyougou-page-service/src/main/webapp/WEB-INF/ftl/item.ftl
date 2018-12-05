@@ -12,9 +12,13 @@
     <link rel="stylesheet" type="text/css" href="css/pages-item.css" />
     <link rel="stylesheet" type="text/css" href="css/pages-zoom.css" />
     <link rel="stylesheet" type="text/css" href="css/widget-cartPanelView.css" />
+
+    <script type="text/javascript" src="plugins/angularJs/angular.min.js">  </script>
+    <script type="text/javascript" src="js/base.js">  </script>
+    <script type="text/javascript" src="js/controller/itemController.js">  </script>
 </head>
 
-<body>
+<body ng-app="pinyougou" ng-controller="itemController" ng-init="num=1">
 <!--页面顶部 开始-->
 <#include "head.ftl">
 <#--字符串转换为对象-->
@@ -32,7 +36,6 @@
 						<a href="#">${itemCat1}</a>
 					</li>
 					<li>
-						<a href="#">${itemCat2}</a>
 					</li>
 					<li>
 						<a href="#">${itemCat3}</a>
@@ -115,6 +118,7 @@
 							</div>
 						</div>
 					</div>
+					{{specificationItem}}
 					<div class="clearfix choose">
 						<div id="specification" class="summary-wrap clearfix">
 							<#list specficationList as item>
@@ -126,7 +130,9 @@
 								</dt>
 								<dd>
 									<#list item.attributeValue as value>
-									<a href="javascript:;" class="selected">${value}<span title="点击取消选择">&nbsp;</span></a>
+									<a href="javascript:;"
+									   class="{{isSelected('${item.attributeName}','${value}')?'selected':''}}"
+									   ng-click="selectSpecification('${item.attributeName}','${value}')">${value}<span title="点击取消选择">&nbsp;</span></a>
 									</#list>
 								</dd>
 							</dl>
@@ -137,9 +143,9 @@
 							<div class="fl title">
 								<div class="control-group">
 									<div class="controls">
-										<input autocomplete="off" type="text" value="1" minnum="1" class="itxt" />
-										<a href="javascript:void(0)" class="increment plus">+</a>
-										<a href="javascript:void(0)" class="increment mins">-</a>
+										<input autocomplete="off" ng-model="num" type="text" value="1" minnum="1" class="itxt" />
+										<a href="javascript:void(0)" class="increment plus" ng-click="addNum(1)">+</a>
+										<a href="javascript:void(0)" class="increment mins" ng-click="addNum(-1)">-</a>
 									</div>
 								</div>
 							</div>
