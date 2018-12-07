@@ -22,10 +22,15 @@
 	    <!-- 这个connectionFactory对应的是我们定义的Spring提供的那个ConnectionFactory对象 -->  
 	    <property name="connectionFactory" ref="connectionFactory"/>  
 	</bean>      
-    <!--这个是队列目的地，点对点的  文本信息-->  
+    <!--这个是队列目的地，点对点的  导入索引库-->
 	<bean id="queueSolrDestination" class="org.apache.activemq.command.ActiveMQQueue">
 	    <constructor-arg value="pinyougou_queue_solr"/>
-	</bean>    
+	</bean>
+
+	<!--这个是队列目的地，点对点的  删除索引库-->
+	<bean id="queueSolrDeleteDestination" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg value="pinyougou_queue_solr_delete"/>
+	</bean>
 	
 	<!--这个是订阅模式  文本信息-->  
 	<!--<bean id="topicTextDestination" class="org.apache.activemq.command.ActiveMQTopic">

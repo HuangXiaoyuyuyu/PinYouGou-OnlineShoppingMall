@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:amq="http://activemq.apache.org/schema/core"
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:amq="http://activemq.apache.org/schema/core"
 	xmlns:jms="http://www.springframework.org/schema/jms"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans   
 		http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -17,7 +20,7 @@
 	    <property name="targetConnectionFactory" ref="targetConnectionFactory"/>  
 	</bean>  
 	
-    <!--这个是队列目的地，点对点的  文本信息-->  
+    <!--这个是队列目的地，点对点的  导入索引-->
 	<bean id="queueSolrDestination" class="org.apache.activemq.command.ActiveMQQueue">
 	    <constructor-arg value="pinyougou_queue_solr"/>
 	</bean>    
@@ -27,6 +30,18 @@
 		<property name="connectionFactory" ref="connectionFactory" />
 		<property name="destination" ref="queueSolrDestination" />
 		<property name="messageListener" ref="itemSearchListener" />
+	</bean>
+
+	<!--这个是队列目的地，点对点的  删除索引-->
+	<bean id="queueSolrDeleteDestination" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg value="pinyougou_queue_solr"/>
+	</bean>
+
+	<!-- 消息监听容器 -->
+	<bean class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="connectionFactory" />
+		<property name="destination" ref="queueSolrDestination" />
+		<property name="messageListener" ref="itemDeleteListener" />
 	</bean>
 	
 </beans>
