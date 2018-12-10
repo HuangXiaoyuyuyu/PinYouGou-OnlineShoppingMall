@@ -17,11 +17,11 @@
     <url>http://www.example.com</url>
 
     <dependencies>
-        <dependency>
+        <!--<dependency>
             <groupId>com.pinyougou</groupId>
             <artifactId>pinyougou-page-interface</artifactId>
             <version>1.0-SNAPSHOT</version>
-        </dependency>
+        </dependency>-->
 
         <!--<dependency>
             <groupId>com.pinyougou</groupId>

@@ -41,7 +41,7 @@
 	<!-- 消息监听容器 -->
 	<bean class="org.springframework.jms.listener.DefaultMessageListenerContainer">
 		<property name="connectionFactory" ref="connectionFactory" />
-		<property name="destination" ref="queueSolrDestination" />
+		<property name="destination" ref="queueSolrDeleteDestination" />
 		<property name="messageListener" ref="itemDeleteListener" />
 	</bean>
 	

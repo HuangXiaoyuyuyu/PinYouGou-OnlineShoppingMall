@@ -3,7 +3,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.alibaba.fastjson.JSON;
-import com.pinyougou.page.service.ItemPageService;
 import com.pinyougou.pojo.TbItem;
 import com.pinyougou.pojogroup.Goods;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +38,8 @@ public class GoodsController {
 	//@Reference(timeout = 100000)
 	//private ItemSearchService itemSearchService;
 
-	@Reference(timeout = 100000)
-	private ItemPageService itemPageService;
+	//@Reference(timeout = 100000)
+	//private ItemPageService itemPageService;
 
 	@Autowired
 	private JmsTemplate jmsTemplate;
@@ -49,7 +48,10 @@ public class GoodsController {
 	private Destination queueSolrDestination;
 
 	@Autowired
-	private Destination queueSolrDeleteDestination;
+	private Destination queueSolrDeleteDestination;//用于导入solr索引库的消息目标(点对点)
+
+	@Autowired
+	private Destination topicPageDestination;//用于生成商品详情页的消息目标(发布订阅)
 	/**
 	 * 返回全部列表
 	 * @return
@@ -102,7 +104,7 @@ public class GoodsController {
 	 * @return
 	 */
 	@RequestMapping("/delete")
-	public Result delete(Long [] ids){
+	public Result delete(final Long [] ids){
 		try {
 			goodsService.delete(ids);
 
@@ -162,8 +164,14 @@ public class GoodsController {
 
 
 				//*****生成商品详细页
-				for (Long goodsId : ids) {
-					itemPageService.genItemHtml(goodsId);
+				for (final Long goodsId : ids) {
+					//itemPageService.genItemHtml(goodsId);
+					jmsTemplate.send(topicPageDestination, new MessageCreator() {
+						@Override
+						public Message createMessage(Session session) throws JMSException {
+							return session.createTextMessage(goodsId+"");
+						}
+					});
 				}
 			}
 
@@ -176,7 +184,7 @@ public class GoodsController {
 
 	@RequestMapping("/genHtml")
 	public void genHtml(Long goodsId) {
-		itemPageService.genItemHtml(goodsId);
+		//itemPageService.genItemHtml(goodsId);
 	}
 	
 }
