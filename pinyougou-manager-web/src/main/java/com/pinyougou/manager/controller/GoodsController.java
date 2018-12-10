@@ -52,6 +52,9 @@ public class GoodsController {
 
 	@Autowired
 	private Destination topicPageDestination;//用于生成商品详情页的消息目标(发布订阅)
+
+    @Autowired
+    private Destination topicPageDeleteDestination;
 	/**
 	 * 返回全部列表
 	 * @return
@@ -116,6 +119,15 @@ public class GoodsController {
 					return session.createObjectMessage(ids);
 				}
 			});
+
+			//删除每个服务器的商品详情页
+            jmsTemplate.send(topicPageDeleteDestination, new MessageCreator() {
+                @Override
+                public Message createMessage(Session session) throws JMSException {
+                    return session.createObjectMessage(ids);
+                }
+            });
+
 			return new Result(true, "删除成功"); 
 		} catch (Exception e) {
 			e.printStackTrace();
