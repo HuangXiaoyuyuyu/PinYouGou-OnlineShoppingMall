@@ -24,6 +24,9 @@
         <module name="pinyougou-sellgoods-service" />
         <module name="pinyougou-shop-web" />
         <module name="pinyougou-solr-util" />
+        <module name="pinyougou-user-interface" />
+        <module name="pinyougou-user-service" />
+        <module name="pinyougou-user-web" />
       </profile>
     </annotationProcessing>
   </component>

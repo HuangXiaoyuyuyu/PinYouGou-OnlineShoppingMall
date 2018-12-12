@@ -2,6 +2,7 @@ package com.pinyougou.page.service.impl;
 
 import com.pinyougou.page.service.ItemPageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -13,6 +14,7 @@ import javax.jms.ObjectMessage;
  * @Date 2018/12/10 11:24
  * @Description TODO
  */
+@Component
 public class PageDeleteListener implements MessageListener {
 
     @Autowired
