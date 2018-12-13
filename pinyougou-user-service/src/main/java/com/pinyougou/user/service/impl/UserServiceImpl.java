@@ -1,5 +1,8 @@
 package com.pinyougou.user.service.impl;
+import java.util.Date;
 import java.util.List;
+
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.Page;
@@ -11,6 +14,12 @@ import com.pinyougou.pojo.TbUserExample.Criteria;
 import com.pinyougou.user.service.UserService;
 
 import entity.PageResult;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
+
+import javax.jms.*;
 
 /**
  * 服务实现层
@@ -22,6 +31,21 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private TbUserMapper userMapper;
+
+	@Autowired
+	private RedisTemplate redisTemplate;
+
+	@Autowired
+	private JmsTemplate jmsTemplate;
+
+	@Autowired
+	private Destination smsDestination;
+
+	@Value("${templatedId}")
+	private String templatedId;
+
+	@Value("${smsSign}")
+	private String smsSign;
 	
 	/**
 	 * 查询全部
@@ -46,7 +70,11 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public void add(TbUser user) {
-		userMapper.insert(user);		
+	    user.setCreated(new Date());
+	    user.setUpdated(new Date());
+        String password = DigestUtils.md5Hex(user.getPassword());
+        user.setPassword(password);
+        userMapper.insert(user);
 	}
 
 	
@@ -132,5 +160,40 @@ public class UserServiceImpl implements UserService {
 		Page<TbUser> page= (Page<TbUser>)userMapper.selectByExample(example);		
 		return new PageResult(page.getTotal(), page.getResult());
 	}
-	
+
+    @Override
+    public void createSmsCode(final String phone) {
+	    //生成6位随机数
+        String code = (long)(Math.random()*1000000)+"";
+        System.out.println("验证码：" + code);
+        //放入缓存
+        redisTemplate.boundHashOps("smsCode").put(phone,code);
+        //发送到activemq
+		jmsTemplate.send(smsDestination, new MessageCreator() {
+			@Override
+			public Message createMessage(Session session) throws JMSException {
+				MapMessage mapMessage = session.createMapMessage();
+				mapMessage.setString("mobile",phone);
+				mapMessage.setString("templatedId", templatedId);
+				mapMessage.setString("smsSign", smsSign);
+				mapMessage.setString("param", code);
+
+				return mapMessage;
+			}
+		});
+    }
+
+    @Override
+    public boolean checkSmsCode(String phone, String code) {
+		//从缓存中获取验证码
+		String systemCode = (String) redisTemplate.boundHashOps("smsCode").get(phone);
+		if (systemCode == null) {
+			return false;
+		}
+		if (!systemCode.equals(code)) {
+			return false;
+		}
+		return true;
+    }
+
 }
