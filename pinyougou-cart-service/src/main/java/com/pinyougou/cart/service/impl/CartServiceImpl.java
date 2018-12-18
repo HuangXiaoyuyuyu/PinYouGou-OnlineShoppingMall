@@ -7,6 +7,7 @@ import com.pinyougou.pojo.TbItem;
 import com.pinyougou.pojo.TbOrderItem;
 import com.pinyougou.pojogroup.Cart;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -19,8 +20,13 @@ import java.util.List;
  */
 @Service
 public class CartServiceImpl implements CartService {
+
     @Autowired
     TbItemMapper itemMapper;
+
+    @Autowired
+    RedisTemplate redisTemplate;
+
     @Override
     public List<Cart> addGoodsToCartlist(List<Cart> cartList, Long itemId, Integer num) {
         //1.根据商品SKU ID查询SKU商品信息
@@ -72,6 +78,33 @@ public class CartServiceImpl implements CartService {
         }
 
         return cartList;
+    }
+
+    @Override
+    public List<Cart> findCartListFromRedis(String username) {
+        System.out.println("从redis中提取购物车数据..."+username);
+        List<Cart> cartList = (List<Cart>) redisTemplate.boundHashOps("cartList").get(username);
+        if (cartList == null) {
+            cartList = new ArrayList<>();
+        }
+        return cartList;
+    }
+
+    @Override
+    public void saveCartToRedis(String username, List<Cart> cartList) {
+        System.out.println("向redis中存入购物车数据..."+username);
+        redisTemplate.boundHashOps("cartList").put(username,cartList);
+    }
+
+    @Override
+    public List<Cart> mergeCartList(List<Cart> cartList1, List<Cart> cartList2) {
+        System.out.println("合并购物车");
+        for (Cart cart : cartList2) {
+            for (TbOrderItem orderItem : cart.getOrderItemList()) {
+                cartList1 = addGoodsToCartlist(cartList1,orderItem.getItemId(),orderItem.getNum());
+            }
+        }
+        return cartList1;
     }
 
     /**
