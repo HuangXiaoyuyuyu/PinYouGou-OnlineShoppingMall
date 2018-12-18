@@ -112,7 +112,7 @@ public class CartServiceImpl implements CartService {
     }
 
     /**
-     * 根据商品明细ID查询
+     * 根据商品明细ID查询  查询购物车明细列表中是否存在该商品
      * @return
      */
     private TbOrderItem searchOrderItemByItemId(List<TbOrderItem> orderItemList,Long itemId) {
