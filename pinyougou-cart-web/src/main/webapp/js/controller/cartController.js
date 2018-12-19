@@ -22,4 +22,31 @@ app.controller('cartController',function($scope,cartService){
         );
     };
 
+    //获取地址列表
+    $scope.findAddressList=function(){
+        cartService.findAddressList().success(
+            function(response){
+                $scope.addressList=response;
+                for (var i=0; i<$scope.addressList.length; i++) {
+                    if ($scope.addressList[i].isDefault == '1') {
+                        $scope.address = $scope.addressList[i];
+                        break;
+                    }
+                }
+            }
+        );
+    };
+
+    $scope.selectAddress = function (address) {
+        $scope.address = address;
+    };
+
+    $scope.isSelectedAddress = function (address) {
+        if (address == $scope.address) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
 });
