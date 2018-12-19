@@ -49,4 +49,10 @@ app.controller('cartController',function($scope,cartService){
         }
     };
 
+    $scope.order = {paymentType:'1'};
+    //选择支付方式
+    $scope.selectPayType = function (type) {
+        $scope.order.paymentType = type;
+    }
+
 });

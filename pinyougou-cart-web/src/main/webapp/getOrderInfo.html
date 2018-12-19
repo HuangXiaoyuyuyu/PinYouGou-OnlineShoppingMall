@@ -16,7 +16,7 @@
 	<script type="text/javascript" src="js/controller/cartController.js">  </script>
 </head>
 
-<body <body ng-app="pinyougou" ng-controller="cartController" ng-init="findAddressList()">>
+<body <body ng-app="pinyougou" ng-controller="cartController" ng-init="findAddressList();findCartList()">>
 	<!--head-->
 	<div class="top">
 		<div class="py-container">
@@ -149,10 +149,11 @@
 					</div>
 					<div class="step-cont">
 						<ul class="payType">
-							<li class="selected">微信付款<span title="点击取消选择"></span></li>
-							<li>货到付款<span title="点击取消选择"></span></li>
+							<li class="selected" ng-click="selectPayType('1')">微信付款<span title="点击取消选择"></span></li>
+							<li ng-click="selectPayType('2')">货到付款<span title="点击取消选择"></span></li>
 						</ul>
 					</div>
+					{{order}}
 					<div class="hr"></div>
 					<div class="step-tit">
 						<h5>送货清单</h5>
@@ -160,22 +161,20 @@
 					<div class="step-cont">
 						<ul class="send-detail">
 							<li>
-								
-								<div class="sendGoods">
-									
-									<ul class="yui3-g">
+								<div class="sendGoods" ng-repeat="cart in cartList">
+									<ul class="yui3-g" ng-repeat="orderItem in cart.orderItemList">
 										<li class="yui3-u-1-6">
-											<span><img src="img/goods.png"/></span>
+											<span><img width="100px" height="100px" src="{{orderItem.picPath}}"/></span>
 										</li>
 										<li class="yui3-u-7-12">
-											<div class="desc">Apple iPhone 6s (A1700) 64G 玫瑰金色 移动联通电信4G手机硅胶透明防摔软壳 本色系列</div>
+											<div class="desc">{{orderItem.title}}</div>
 											<div class="seven">7天无理由退货</div>
 										</li>
 										<li class="yui3-u-1-12">
-											<div class="price">￥5399.00</div>
+											<div class="price">￥{{orderItem.price}}</div>
 										</li>
 										<li class="yui3-u-1-12">
-											<div class="num">X1</div>
+											<div class="num">X{{orderItem.num}}</div>
 										</li>
 										<li class="yui3-u-1-12">
 											<div class="exit">有货</div>
@@ -209,8 +208,8 @@
 		<div class="order-summary">
 			<div class="static fr">
 				<div class="list">
-					<span><i class="number">1</i>件商品，总商品金额</span>
-					<em class="allprice">¥5399.00</em>
+					<span><i class="number">{{totalValue.totalNum}}</i>件商品，总商品金额</span>
+					<em class="allprice">¥{{totalValue.totalFee.toFixed(2)}}</em>
 				</div>
 				<div class="list">
 					<span>返现：</span>
@@ -223,7 +222,7 @@
 			</div>
 		</div>
 		<div class="clearfix trade">
-			<div class="fc-price">应付金额:　<span class="price">¥5399.00</span></div>
+			<div class="fc-price">应付金额:　<span class="price">¥{{totalValue.totalFee.toFixed(2)}}</span></div>
 			<div class="fc-receiverInfo">寄送至:{{address.address}} 收货人：{{address.contact}} {{address.mobile}}</div>
 		</div>
 		<div class="submit">
