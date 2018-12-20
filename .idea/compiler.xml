@@ -15,6 +15,8 @@
         <module name="pinyougou-content-service" />
         <module name="pinyougou-dao" />
         <module name="pinyougou-manager-web" />
+        <module name="pinyougou-order-interface" />
+        <module name="pinyougou-order-service" />
         <module name="pinyougou-page-interface" />
         <module name="pinyougou-page-service" />
         <module name="pinyougou-page-web" />
