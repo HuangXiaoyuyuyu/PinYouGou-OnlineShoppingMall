@@ -11,10 +11,15 @@
 	
     <link rel="stylesheet" type="text/css" href="css/webbase.css" />
     <link rel="stylesheet" type="text/css" href="css/pages-weixinpay.css" />
+
+	<script type="text/javascript" src="plugins/angularJs/angular.min.js">  </script>
+	<script type="text/javascript" src="js/base.js">  </script>
+	<script type="text/javascript" src="js/service/payService.js">  </script>
+	<script type="text/javascript" src="js/controller/payController.js">  </script>
+	<script type="text/javascript" src="plugins/qrious.min.js"></script>
 </head>
 
-	<body>
-		<!--head-->
+	<body ng-app="pinyougou" ng-controller="payController" ng-init="createNative()">		<!--head-->
 		<div class="top">
 			<div class="py-container">
 				<div class="shortcut">
@@ -49,16 +54,15 @@
 			<!--主内容-->
 			<div class="checkout py-container  pay">
 				<div class="checkout-tit">
-					<h4 class="fl tit-txt"><span class="success-icon"></span><span  class="success-info">订单提交成功，请您及时付款！订单号：56789065645</span></h4>
-                    <span class="fr"><em class="sui-lead">应付金额：</em><em  class="orange money">￥17,654</em>元</span>
+					<h4 class="fl tit-txt"><span class="success-icon"></span><span  class="success-info">订单提交成功，请您及时付款！订单号：{{out_trade_no}}</span></h4>
+                    <span class="fr"><em class="sui-lead">应付金额：</em><em  class="orange money">￥{{money}}</em>元</span>
 					<div class="clearfix"></div>
 				</div>				
 				<div class="checkout-steps">
 					<div class="fl weixin">微信支付</div>
                     <div class="fl sao"> 
-                        <p class="red">二维码已过期，刷新页面重新获取二维码。</p>                      
                         <div class="fl code">
-                            <img src="img/erweima.png" alt="">
+                            <img id="qrious">
                             <div class="saosao">
                                 <p>请使用微信扫一扫</p>
                                 <p>扫描二维码支付</p>
