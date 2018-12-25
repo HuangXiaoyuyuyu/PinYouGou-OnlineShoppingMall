@@ -12,6 +12,11 @@
     <artifactId>pinyougou-common</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
+
         <!-- 文件上传组件 -->
         <dependency>
             <groupId>org.csource.fastdfs</groupId>

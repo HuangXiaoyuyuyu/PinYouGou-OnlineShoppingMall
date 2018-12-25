@@ -20,6 +20,8 @@
         <module name="pinyougou-page-interface" />
         <module name="pinyougou-page-service" />
         <module name="pinyougou-page-web" />
+        <module name="pinyougou-pay-interface" />
+        <module name="pinyougou-pay-service" />
         <module name="pinyougou-pojo" />
         <module name="pinyougou-portal-web" />
         <module name="pinyougou-search-interface" />

@@ -8,7 +8,9 @@
         http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <dubbo:protocol name="dubbo" port="20880"></dubbo:protocol>
+	<context:property-placeholder location="classpath*:properties/weixinpay.properties" />
+
+    <dubbo:protocol name="dubbo" port="20880" />
 	<dubbo:application name="pinyougou-pay-service"/>
     <dubbo:registry address="zookeeper://192.168.25.129:2181"/>
     <dubbo:annotation package="com.pinyougou.pay.service.impl" />
