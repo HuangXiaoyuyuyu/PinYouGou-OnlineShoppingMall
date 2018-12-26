@@ -11,9 +11,14 @@
 	
     <link rel="stylesheet" type="text/css" href="css/webbase.css" />
     <link rel="stylesheet" type="text/css" href="css/pages-paysuccess.css" />
+	<script type="text/javascript" src="plugins/angularJs/angular.min.js">  </script>
+	<script type="text/javascript" src="js/base.js">  </script>
+	<script type="text/javascript" src="js/service/payService.js">  </script>
+	<script type="text/javascript" src="js/controller/payController.js">  </script>
+	<script type="text/javascript" src="plugins/qrious.min.js"></script>
 </head>
 
-	<body>
+	<body ng-app="pinyougou" ng-controller="payController">
 		<!--head-->
 		<div class="top">
 			<div class="py-container">
@@ -51,7 +56,7 @@
 					<h3><img src="img/_/right.png" width="48" height="48">　恭喜您，支付成功啦！</h3>
 					<div class="paydetail">
 					<p>支付方式：微信支付</p>
-					<p>支付金额：￥1006.00元</p>
+					<p>支付金额：￥{{getMoney()}}元</p>
 					<p class="button"><a href="myOrder.html" class="sui-btn btn-xlarge btn-danger">查看订单</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="index.html" class="sui-btn btn-xlarge ">继续购物</a></p>
 				    </div>
 				</div>

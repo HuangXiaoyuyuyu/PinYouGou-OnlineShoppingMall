@@ -44,12 +44,15 @@ public class WeixinPayServiceImpl implements WeixinPayService {
         try {
             //2.生成要发送的xml
             String xmlParam = WXPayUtil.generateSignedXml(param, partnerkey);
-            System.out.println(xmlParam);
+            System.out.println("请求的参数："+xmlParam);
+
+            //发送请求
             HttpClient client=new HttpClient("https://api.mch.weixin.qq.com/pay/unifiedorder");
             client.setHttps(true);
             client.setXmlParam(xmlParam);
             client.post();
             //3.获得结果
+            System.out.println("===============分隔符==============");
             String result = client.getContent();
             System.out.println(result);
             Map<String, String> resultMap = WXPayUtil.xmlToMap(result);
@@ -61,6 +64,33 @@ public class WeixinPayServiceImpl implements WeixinPayService {
         } catch (Exception e) {
             e.printStackTrace();
             return new HashMap<>();
+        }
+    }
+
+    @Override
+    public Map queryPayStatus(String out_trade_no) {
+        Map parm = new HashMap();
+        parm.put("appid",appid);//公众号ID
+        parm.put("mch_id",partner);//商户号
+        parm.put("out_trade_no",out_trade_no);//订单号
+        parm.put("nonce_str",WXPayUtil.generateNonceStr());//随机字符串
+
+        String url = "https://api.mch.weixin.qq.com/pay/orderquery";
+
+        try {
+            String xmlParm = WXPayUtil.generateSignedXml(parm, partnerkey);
+            HttpClient client = new HttpClient(url);
+            client.setHttps(true);
+            client.setXmlParam(xmlParm);
+            client.post();
+
+            String result = client.getContent();
+            Map<String, String> map = WXPayUtil.xmlToMap(result);
+            System.out.println(map);
+            return map;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }
