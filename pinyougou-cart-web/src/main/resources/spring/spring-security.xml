@@ -11,8 +11,6 @@
     <http pattern="/plugins/**" security="none"></http>
 
     <http pattern="/cart.html" security="none"></http>
-    <http pattern="/*.html" security="none"></http>
-    <http pattern="/pay/*.do" security="none"></http>
 
 	<!--   entry-point-ref  入口点引用 -->
 	<http use-expressions="false" entry-point-ref="casProcessingFilterEntryPoint">

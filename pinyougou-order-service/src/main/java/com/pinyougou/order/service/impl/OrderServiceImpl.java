@@ -1,10 +1,13 @@
 package com.pinyougou.order.service.impl;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import com.pinyougou.mapper.TbOrderItemMapper;
+import com.pinyougou.mapper.TbPayLogMapper;
 import com.pinyougou.pojo.TbOrderItem;
+import com.pinyougou.pojo.TbPayLog;
 import com.pinyougou.pojogroup.Cart;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.dubbo.config.annotation.Service;
@@ -39,6 +42,10 @@ public class OrderServiceImpl implements OrderService {
 
 	@Autowired
 	private TbOrderItemMapper orderItemMapper;
+
+	@Autowired
+	private TbPayLogMapper payLogMapper;
+
 	
 	/**
 	 * 查询全部
@@ -64,6 +71,9 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public void add(TbOrder order) {
 		List<Cart> cartList = (List<Cart>) redisTemplate.boundHashOps("cartList").get(order.getUserId());
+		List<String> orderIdList = new ArrayList<>();//订单ID列表
+		double total_money = 0;//总金额  元
+
 		for (Cart cart : cartList) {
 			long orderId = idWorker.nextId();
 			TbOrder tbOrder = new TbOrder();
@@ -89,7 +99,25 @@ public class OrderServiceImpl implements OrderService {
 			}
 			tbOrder.setPayment(new BigDecimal(money));
 			orderMapper.insert(tbOrder);
+			orderIdList.add(orderId+"");
+			total_money += money;
 		}
+
+		if ("1".equals(order.getPaymentType())) {
+			TbPayLog payLog = new TbPayLog();
+			payLog.setOutTradeNo(idWorker.nextId()+"");//支付订单号
+			payLog.setCreateTime(new Date());//创建时间
+			payLog.setUserId(order.getUserId());//用户ID
+			//订单号列表
+			payLog.setOrderList(orderIdList.toString().replace("[","").replace("]",""));
+			payLog.setPayType("1");//支付类型
+			payLog.setTradeState("0");//支付状态
+			payLog.setTotalFee((long) (total_money*100));//总金额  分
+			payLogMapper.insert(payLog);
+
+			redisTemplate.boundHashOps("payLog").put(order.getUserId(),payLog);
+		}
+
 		redisTemplate.boundHashOps("cartList").delete(order.getUserId());
 	}
 
@@ -185,5 +213,32 @@ public class OrderServiceImpl implements OrderService {
 		Page<TbOrder> page= (Page<TbOrder>)orderMapper.selectByExample(example);		
 		return new PageResult(page.getTotal(), page.getResult());
 	}
-	
+
+	@Override
+	public TbPayLog searchPayLogFromRedis(String userId) {
+		return (TbPayLog) redisTemplate.boundHashOps("payLog").get(userId);
+	}
+
+	@Override
+	public void updateOrderStatus(String out_trade_no, String transaction_id) {
+		TbPayLog payLog = payLogMapper.selectByPrimaryKey(out_trade_no);
+		payLog.setPayTime(new Date());
+		payLog.setTradeState("1");//已支付
+		payLog.setTransactionId(transaction_id);//交易号
+		payLogMapper.updateByPrimaryKey(payLog);
+
+		String orderList = payLog.getOrderList();//获取订单列表
+		String[] orderIds = orderList.split(",");//获取订单号数组
+		for (String orderId : orderIds) {
+			TbOrder order = orderMapper.selectByPrimaryKey(Long.parseLong(orderId));
+			if (order != null) {
+				order.setStatus("2");//已付款
+				orderMapper.updateByPrimaryKey(order);
+			}
+		}
+
+		//清除redis缓存
+		redisTemplate.boundHashOps("payLog").delete(payLog.getUserId());
+	}
+
 }
