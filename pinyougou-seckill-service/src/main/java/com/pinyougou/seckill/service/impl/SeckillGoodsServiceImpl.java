@@ -1,4 +1,5 @@
 package com.pinyougou.seckill.service.impl;
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.dubbo.config.annotation.Service;
@@ -108,5 +109,16 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
 		Page<TbSeckillGoods> page= (Page<TbSeckillGoods>)seckillGoodsMapper.selectByExample(example);		
 		return new PageResult(page.getTotal(), page.getResult());
 	}
-	
+
+	@Override
+	public List<TbSeckillGoods> findList() {
+		TbSeckillGoodsExample example=new TbSeckillGoodsExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andStatusEqualTo("1");//审核通过
+		criteria.andStockCountGreaterThan(0);//剩余库存大于0
+		criteria.andStartTimeLessThanOrEqualTo(new Date());//开始时间小于等于当前时间
+		criteria.andEndTimeGreaterThan(new Date());//结束时间大于当前时间
+		return seckillGoodsMapper.selectByExample(example);
+	}
+
 }

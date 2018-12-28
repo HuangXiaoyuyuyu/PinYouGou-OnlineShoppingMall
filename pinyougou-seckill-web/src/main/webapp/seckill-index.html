@@ -11,9 +11,14 @@
     <link rel="stylesheet" type="text/css" href="css/webbase.css" />
     <link rel="stylesheet" type="text/css" href="css/widget-jquery.autocomplete.css" />
     <link rel="stylesheet" type="text/css" href="css/pages-seckill-index.css" />
+
+	<script type="text/javascript" src="plugins/angularJs/angular.min.js">  </script>
+	<script type="text/javascript" src="js/base.js">  </script>
+	<script type="text/javascript" src="js/service/seckillGoodsService.js">  </script>
+	<script src="js/controller/seckillGoodsController.js">  </script>
 </head>
 
-<body>
+<body ng-app="pinyougou" ng-controller="seckillGoodsController" ng-init="findList()">
 	<!-- 头部栏位 -->
 	<!--页面顶部-->
 <div id="nav-bottom">
@@ -163,186 +168,22 @@ $(function(){
 		<!--商品列表-->
 		<div class="goods-list">
 			<ul class="seckill" id="seckill">
-				<li class="seckill-item" >
+				<li class="seckill-item" ng-repeat="pojo in list">
 					<div class="pic" onclick="location.href='seckill-item.html'">
-						<img src="img/_/list.jpg" alt=''  >
+						<img src="{{pojo.smallPic}}" width="290px" height="290px" alt=''  >
 					</div>
-					<div class="intro"><span>Apple苹果iPhone 6s 32G金色 移动联通电信4G手机</span></div>
-					<div class='price'><b class='sec-price'>￥6088</b><b class='ever-price'>￥6988</b></div>
+					<div class="intro"><span>{{pojo.title}}</span></div>
+					<div class='price'><b class='sec-price'>￥{{pojo.costPrice}}</b><b class='ever-price'>￥{{pojo.price}}</b></div>
 					<div class='num'>
-						<div>已售87%</div>
+						<div>已售{{ ((pojo.num-pojo.stockCount)/pojo.num*100).toFixed(0) }}%</div>
 						<div class='progress'>
-							<div class='sui-progress progress-danger'><span style='width: 70%;' class='bar'></span></div>
+							<div class='sui-progress progress-danger'><span style='width: {{ ((pojo.num-pojo.stockCount)/pojo.num*100).toFixed(0) }}%;' class='bar'></span></div>
 						</div>
-						<div>剩余<b class='owned'>29</b>件</div>
+						<div>剩余<b class='owned'>{{pojo.stockCount}}</b>件</div>
 					</div>
 					<a class='sui-btn btn-block btn-buy' href='seckill-item.html' target='_blank'>立即抢购</a>
 				</li>
-				<li class="seckill-item">
-					<div class="pic">
-						<img src="img/_/list.jpg" alt=''>
-					</div>
-					<div class="intro"><span>Apple苹果iPhone 6s 32G金色 移动联通电信4G手机</span></div>
-					<div class='price'><b class='sec-price'>￥6088</b><b class='ever-price'>￥6988</b></div>
-					<div class='num'>
-						<div>已售87%</div>
-						<div class='progress'>
-							<div class='sui-progress progress-danger'><span style='width: 70%;' class='bar'></span></div>
-						</div>
-						<div>剩余<b class='owned'>29</b>件</div>
-					</div>
-					<a class='sui-btn btn-block btn-buy' href='seckill-item.html' target='_blank'>立即抢购</a>
-				</li>
-				<li class="seckill-item">
-					<div class="pic">
-						<img src="img/_/list.jpg" alt=''>
-					</div>
-					<div class="intro"><span>Apple苹果iPhone 6s 32G金色 移动联通电信4G手机</span></div>
-					<div class='price'><b class='sec-price'>￥6088</b><b class='ever-price'>￥6988</b></div>
-					<div class='num'>
-						<div>已售87%</div>
-						<div class='progress'>
-							<div class='sui-progress progress-danger'><span style='width: 70%;' class='bar'></span></div>
-						</div>
-						<div>剩余<b class='owned'>29</b>件</div>
-					</div>
-					<a class='sui-btn btn-block btn-buy' href='seckill-item.html' target='_blank'>立即抢购</a>
-				</li>
-				<li class="seckill-item">
-					<div class="pic">
-						<img src="img/_/list.jpg" alt=''>
-					</div>
-					<div class="intro"><span>Apple苹果iPhone 6s 32G金色 移动联通电信4G手机</span></div>
-					<div class='price'><b class='sec-price'>￥6088</b><b class='ever-price'>￥6988</b></div>
-					<div class='num'>
-						<div>已售87%</div>
-						<div class='progress'>
-							<div class='sui-progress progress-danger'><span style='width: 70%;' class='bar'></span></div>
-						</div>
-						<div>剩余<b class='owned'>29</b>件</div>
-					</div>
-					<a class='sui-btn btn-block btn-buy' href='seckill-item.html' target='_blank'>立即抢购</a>
-				</li>
-				<li class="seckill-item">
-					<div class="pic">
-						<img src="img/_/list.jpg" alt=''>
-					</div>
-					<div class="intro"><span>Apple苹果iPhone 6s 32G金色 移动联通电信4G手机</span></div>
-					<div class='price'><b class='sec-price'>￥6088</b><b class='ever-price'>￥6988</b></div>
-					<div class='num'>
-						<div>已售87%</div>
-						<div class='progress'>
-							<div class='sui-progress progress-danger'><span style='width: 70%;' class='bar'></span></div>
-						</div>
-						<div>剩余<b class='owned'>29</b>件</div>
-					</div>
-					<a class='sui-btn btn-block btn-buy' href='seckill-item.html' target='_blank'>立即抢购</a>
-				</li>
-				<li class="seckill-item">
-					<div class="pic">
-						<img src="img/_/list.jpg" alt=''>
-					</div>
-					<div class="intro"><span>Apple苹果iPhone 6s 32G金色 移动联通电信4G手机</span></div>
-					<div class='price'><b class='sec-price'>￥6088</b><b class='ever-price'>￥6988</b></div>
-					<div class='num'>
-						<div>已售87%</div>
-						<div class='progress'>
-							<div class='sui-progress progress-danger'><span style='width: 70%;' class='bar'></span></div>
-						</div>
-						<div>剩余<b class='owned'>29</b>件</div>
-					</div>
-					<a class='sui-btn btn-block btn-buy' href='seckill-item.html' target='_blank'>立即抢购</a>
-				</li>
-				<li class="seckill-item">
-					<div class="pic">
-						<img src="img/_/list.jpg" alt=''>
-					</div>
-					<div class="intro"><span>Apple苹果iPhone 6s 32G金色 移动联通电信4G手机</span></div>
-					<div class='price'><b class='sec-price'>￥6088</b><b class='ever-price'>￥6988</b></div>
-					<div class='num'>
-						<div>已售87%</div>
-						<div class='progress'>
-							<div class='sui-progress progress-danger'><span style='width: 70%;' class='bar'></span></div>
-						</div>
-						<div>剩余<b class='owned'>29</b>件</div>
-					</div>
-					<a class='sui-btn btn-block btn-buy' href='seckill-item.html' target='_blank'>立即抢购</a>
-				</li>
-				<li class="seckill-item">
-					<div class="pic">
-						<img src="img/_/list.jpg" alt=''>
-					</div>
-					<div class="intro"><span>Apple苹果iPhone 6s 32G金色 移动联通电信4G手机</span></div>
-					<div class='price'><b class='sec-price'>￥6088</b><b class='ever-price'>￥6988</b></div>
-					<div class='num'>
-						<div>已售87%</div>
-						<div class='progress'>
-							<div class='sui-progress progress-danger'><span style='width: 70%;' class='bar'></span></div>
-						</div>
-						<div>剩余<b class='owned'>29</b>件</div>
-					</div>
-					<a class='sui-btn btn-block btn-buy' href='seckill-item.html' target='_blank'>立即抢购</a>
-				</li>
-				<li class="seckill-item">
-					<div class="pic">
-						<img src="img/_/list.jpg" alt=''>
-					</div>
-					<div class="intro"><span>Apple苹果iPhone 6s 32G金色 移动联通电信4G手机</span></div>
-					<div class='price'><b class='sec-price'>￥6088</b><b class='ever-price'>￥6988</b></div>
-					<div class='num'>
-						<div>已售87%</div>
-						<div class='progress'>
-							<div class='sui-progress progress-danger'><span style='width: 70%;' class='bar'></span></div>
-						</div>
-						<div>剩余<b class='owned'>29</b>件</div>
-					</div>
-					<a class='sui-btn btn-block btn-buy' href='seckill-item.html' target='_blank'>立即抢购</a>
-				</li>
-				<li class="seckill-item">
-					<div class="pic">
-						<img src="img/_/list.jpg" alt=''>
-					</div>
-					<div class="intro"><span>Apple苹果iPhone 6s 32G金色 移动联通电信4G手机</span></div>
-					<div class='price'><b class='sec-price'>￥6088</b><b class='ever-price'>￥6988</b></div>
-					<div class='num'>
-						<div>已售87%</div>
-						<div class='progress'>
-							<div class='sui-progress progress-danger'><span style='width: 70%;' class='bar'></span></div>
-						</div>
-						<div>剩余<b class='owned'>29</b>件</div>
-					</div>
-					<a class='sui-btn btn-block btn-buy' href='seckill-item.html' target='_blank'>立即抢购</a>
-				</li>
-				<li class="seckill-item">
-					<div class="pic">
-						<img src="img/_/list.jpg" alt=''>
-					</div>
-					<div class="intro"><span>Apple苹果iPhone 6s 32G金色 移动联通电信4G手机</span></div>
-					<div class='price'><b class='sec-price'>￥6088</b><b class='ever-price'>￥6988</b></div>
-					<div class='num'>
-						<div>已售87%</div>
-						<div class='progress'>
-							<div class='sui-progress progress-danger'><span style='width: 70%;' class='bar'></span></div>
-						</div>
-						<div>剩余<b class='owned'>29</b>件</div>
-					</div>
-					<a class='sui-btn btn-block btn-buy' href='seckill-item.html' target='_blank'>立即抢购</a>
-				</li>
-				<li class="seckill-item">
-					<div class="pic">
-						<img src="img/_/list.jpg" alt=''>
-					</div>
-					<div class="intro"><span>Apple苹果iPhone 6s 32G金色 移动联通电信4G手机</span></div>
-					<div class='price'><b class='sec-price'>￥6088</b><b class='ever-price'>￥6988</b></div>
-					<div class='num'>
-						<div>已售87%</div>
-						<div class='progress'>
-							<div class='sui-progress progress-danger'><span style='width: 70%;' class='bar'></span></div>
-						</div>
-						<div>剩余<b class='owned'>29</b>件</div>
-					</div>
-					<a class='sui-btn btn-block btn-buy' href='seckill-item.html' target='_blank'>立即抢购</a>
-				</li>
+
 
 
 			</ul>

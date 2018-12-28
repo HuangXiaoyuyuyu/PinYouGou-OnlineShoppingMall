@@ -11,7 +11,7 @@
     <http pattern="/plugins/**" security="none"></http>
 
     <http pattern="/*.html" security="none"></http>
-    <http pattern="/*/*.do.html" security="none"></http>
+    <http pattern="/*/*.do" security="none"></http>
 
 	<!--   entry-point-ref  入口点引用 -->
 	<http use-expressions="false" entry-point-ref="casProcessingFilterEntryPoint">
