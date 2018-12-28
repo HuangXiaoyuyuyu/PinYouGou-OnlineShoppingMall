@@ -27,6 +27,9 @@
         <module name="pinyougou-search-interface" />
         <module name="pinyougou-search-service" />
         <module name="pinyougou-search-web" />
+        <module name="pinyougou-seckill-interface" />
+        <module name="pinyougou-seckill-service" />
+        <module name="pinyougou-seckill-web" />
         <module name="pinyougou-sellgoods-interface" />
         <module name="pinyougou-sellgoods-service" />
         <module name="pinyougou-shop-web" />
