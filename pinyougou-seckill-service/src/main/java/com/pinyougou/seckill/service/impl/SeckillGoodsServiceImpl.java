@@ -12,6 +12,7 @@ import com.pinyougou.pojo.TbSeckillGoodsExample.Criteria;
 import com.pinyougou.seckill.service.SeckillGoodsService;
 
 import entity.PageResult;
+import org.springframework.data.redis.core.RedisTemplate;
 
 /**
  * 服务实现层
@@ -23,7 +24,11 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
 
 	@Autowired
 	private TbSeckillGoodsMapper seckillGoodsMapper;
-	
+
+	@Autowired
+	private RedisTemplate redisTemplate;
+
+
 	/**
 	 * 查询全部
 	 */
@@ -112,13 +117,26 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
 
 	@Override
 	public List<TbSeckillGoods> findList() {
-		TbSeckillGoodsExample example=new TbSeckillGoodsExample();
-		Criteria criteria = example.createCriteria();
-		criteria.andStatusEqualTo("1");//审核通过
-		criteria.andStockCountGreaterThan(0);//剩余库存大于0
-		criteria.andStartTimeLessThanOrEqualTo(new Date());//开始时间小于等于当前时间
-		criteria.andEndTimeGreaterThan(new Date());//结束时间大于当前时间
-		return seckillGoodsMapper.selectByExample(example);
+		//获取秒杀商品列表
+		List<TbSeckillGoods> seckillGoodsList = redisTemplate.boundHashOps("seckillGoods").values();
+		if (seckillGoodsList == null || seckillGoodsList.size() == 0) {
+			TbSeckillGoodsExample example = new TbSeckillGoodsExample();
+			Criteria criteria = example.createCriteria();
+			criteria.andStatusEqualTo("1");//审核通过
+			criteria.andStockCountGreaterThan(0);//剩余库存大于0
+			criteria.andStartTimeLessThanOrEqualTo(new Date());//开始时间小于等于当前时间
+			criteria.andEndTimeGreaterThan(new Date());//结束时间大于当前时间
+			seckillGoodsList = seckillGoodsMapper.selectByExample(example);
+			//将商品放入缓存
+			System.out.println("将商品放入缓存");
+			for (TbSeckillGoods seckillGoods : seckillGoodsList) {
+				redisTemplate.boundHashOps("seckillGoods").put(seckillGoods.getId(),seckillGoods);
+			}
+		} else {
+			System.out.println("从缓存中获取~~~~~");
+		}
+
+		return seckillGoodsList;
 	}
 
 }
