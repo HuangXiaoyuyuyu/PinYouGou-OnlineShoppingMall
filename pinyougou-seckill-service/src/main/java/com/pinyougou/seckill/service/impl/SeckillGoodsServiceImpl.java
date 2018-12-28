@@ -139,4 +139,9 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
 		return seckillGoodsList;
 	}
 
+	@Override
+	public TbSeckillGoods findOneFromRedis(Long id) {
+		return  (TbSeckillGoods)redisTemplate.boundHashOps("seckillGoods").get(id);
+	}
+
 }
