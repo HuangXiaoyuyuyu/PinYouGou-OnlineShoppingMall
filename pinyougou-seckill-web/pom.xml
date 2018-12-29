@@ -20,6 +20,12 @@
 
         <dependency>
             <groupId>com.pinyougou</groupId>
+            <artifactId>pinyougou-pay-interface</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.pinyougou</groupId>
             <artifactId>pinyougou-seckill-interface</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>

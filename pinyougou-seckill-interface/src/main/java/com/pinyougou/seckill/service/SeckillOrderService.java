@@ -64,5 +64,11 @@ public interface SeckillOrderService {
 	 * @param userId
 	 */
 	public void submitOrder(Long seckillId,String userId);
+
+	/**
+	 * 根据用户名查询秒杀订单
+	 * @param userId
+	 */
+	public TbSeckillOrder searchOrderFromRedisByUserId(String userId);
 	
 }
