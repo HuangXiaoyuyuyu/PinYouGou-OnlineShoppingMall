@@ -12,7 +12,7 @@ app.controller('payController' ,function($scope,$location,payService){
                     level:'H',
                     value:response.code_url
                 });
-               // queryPayStatus(response.out_trade_no);
+                queryPayStatus(response.out_trade_no);
             }
         );
     };

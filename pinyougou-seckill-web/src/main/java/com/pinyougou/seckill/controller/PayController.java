@@ -54,26 +54,30 @@ public class PayController {
      */
     @RequestMapping("/queryPayStatus")
     public Result queryPayStatus(String out_trade_no) throws Exception {
-        Result result = null;
-        int x = 0;
-        while (true) {
-            Map map = weixinPayService.queryPayStatus(out_trade_no);
-            if (map == null) {
-                result = new Result(false,"支付异常");
+        //获取当前用户
+        String userId=SecurityContextHolder.getContext().getAuthentication().getName();
+        Result result=null;
+        int x=0;
+        while(true){
+            //调用查询接口
+            Map<String,String> map = weixinPayService.queryPayStatus(out_trade_no);
+            if(map==null){//出错
+                result=new  Result(false, "支付出错");
                 break;
             }
-            System.out.println(map);
-            if (map.get("trade_state") != null && map.get("trade_state").equals("SUCCESS")) {
-                result = new Result(true,"支付成功");
-                //orderService.updateOrderStatus(out_trade_no,map.get("transaction_id")+"");
+            if(map.get("trade_state").equals("SUCCESS")){//如果成功
+                result=new  Result(true, "支付成功");
+                seckillOrderService.saveOrderFromRedisToDb(userId, Long.valueOf(out_trade_no), map.get("transaction_id"));
                 break;
             }
-
-            Thread.sleep(3000);
-
-            x++;
-            if (x >= 100) {
-                result = new Result(false,"二维码超时");
+            try {
+                Thread.sleep(3000);//间隔三秒
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            x++;//设置超时时间为5分钟
+            if(x>100){
+                result=new  Result(false, "二维码超时");
                 break;
             }
         }
