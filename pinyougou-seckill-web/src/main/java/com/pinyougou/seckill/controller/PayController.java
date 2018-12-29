@@ -54,10 +54,9 @@ public class PayController {
      */
     @RequestMapping("/queryPayStatus")
     public Result queryPayStatus(String out_trade_no) throws Exception {
-        //获取当前用户
         String userId=SecurityContextHolder.getContext().getAuthentication().getName();
         Result result=null;
-        int x=0;
+        int x = 0;
         while(true){
             //调用查询接口
             Map<String,String> map = weixinPayService.queryPayStatus(out_trade_no);
@@ -67,7 +66,6 @@ public class PayController {
             }
             if(map.get("trade_state").equals("SUCCESS")){//如果成功
                 result=new  Result(true, "支付成功");
-                seckillOrderService.saveOrderFromRedisToDb(userId, Long.valueOf(out_trade_no), map.get("transaction_id"));
                 break;
             }
             try {
@@ -75,9 +73,24 @@ public class PayController {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            x++;//设置超时时间为5分钟
-            if(x>100){
+
+            //不让循环无休止地运行定义变量，如果超过了这个值则退出循环，设置时间为1分钟
+            x++;
+            if(x>20){
                 result=new  Result(false, "二维码超时");
+                //1.调用微信的关闭订单接口（学员实现）
+                Map<String,String> payresult = weixinPayService.closePay(out_trade_no);
+                if( !"SUCCESS".equals(payresult.get("result_code")) ){//如果返回结果是正常关闭
+                    if("ORDERPAID".equals(payresult.get("err_code"))){
+                        result=new Result(true, "支付成功");
+                        seckillOrderService.saveOrderFromRedisToDb(userId, Long.valueOf(out_trade_no), map.get("transaction_id"));
+                    }
+                }
+                if(result.getSuccess()==false){
+                    System.out.println("超时，取消订单");
+                    //2.调用删除
+                    seckillOrderService.deleteOrderFromRedis(userId, Long.valueOf(out_trade_no));
+                }
                 break;
             }
         }

@@ -187,4 +187,20 @@ public class SeckillOrderServiceImpl implements SeckillOrderService {
 		redisTemplate.boundHashOps("seckillOrder").delete(userId);//从redis中清除
 	}
 
+	@Override
+	public void deleteOrderFromRedis(String userId, Long orderId) {
+		//根据用户ID查询
+		TbSeckillOrder seckillOrder = (TbSeckillOrder) redisTemplate.boundHashOps("seckillOrder").get(userId);
+		if(seckillOrder!=null && seckillOrder.getId().longValue()== orderId.longValue() ){
+			redisTemplate.boundHashOps("seckillOrder").delete(userId);//删除缓存中的订单
+			//恢复库存
+			//1.从缓存中提取秒杀商品
+			TbSeckillGoods seckillGoods=(TbSeckillGoods)redisTemplate.boundHashOps("seckillGoods").get(seckillOrder.getSeckillId());
+			if(seckillGoods!=null){
+				seckillGoods.setStockCount(seckillGoods.getStockCount()+1);
+				redisTemplate.boundHashOps("seckillGoods").put(seckillOrder.getSeckillId(), seckillGoods);//存入缓存
+			}
+		}
+	}
+
 }
