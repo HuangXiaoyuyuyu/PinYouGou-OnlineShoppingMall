@@ -24,10 +24,10 @@ app.controller('payController' ,function($scope,$location,payService){
                 if(response.success){
                     location.href="paysuccess.html#?money="+$scope.money;
                 }else{
-                    if (response.message == '二维码超时') {
-                        $scope.createNative();//重新生成二维码
-                    }else {
-                        location.href = "payfail.html";
+                    if(response.message=='二维码超时'){
+                        location.href="payTimeOut.html";
+                    }else{
+                        location.href="payfail.html";
                     }
                 }
             }
