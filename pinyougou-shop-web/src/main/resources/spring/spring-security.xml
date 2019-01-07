@@ -42,6 +42,5 @@
 
     <dubbo:application name="pinyougou-shop-web" />
     <dubbo:registry address="zookeeper://192.168.25.129:2181"/>
-
     <dubbo:reference id="sellerService" interface="com.pinyougou.sellergoods.service.SellerService" />
 </beans:beans>
