@@ -8,9 +8,8 @@
         http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <dubbo:protocol name="dubbo" port="20880"></dubbo:protocol>
-	<dubbo:application name="pinyougou-sellergoods-service"/>  
-    <dubbo:annotation package="com.pinyougou.sellergoods.service.impl" />
-   
-   
+	<context:property-placeholder location="classpath*:properties/*.properties" />
+
+    <!--<dubbo:registry address="zookeeper://192.168.25.129:2181"/>-->
+	<dubbo:registry protocol="zookeeper" address="192.168.25.129:2181" />
 </beans>
