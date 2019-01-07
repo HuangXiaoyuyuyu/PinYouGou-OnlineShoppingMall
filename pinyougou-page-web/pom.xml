@@ -16,6 +16,10 @@
     <!-- FIXME change it to the project's website -->
     <url>http://www.example.com</url>
 
+    <properties>
+        <port>9105</port>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
@@ -24,7 +28,7 @@
                 <version>2.2</version>
                 <configuration>
                     <!-- 指定端口 -->
-                    <port>9105</port>
+                    <port>${port}</port>
                     <!-- 请求路径 -->
                     <path>/</path>
                 </configuration>
