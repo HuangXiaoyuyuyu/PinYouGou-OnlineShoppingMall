@@ -20,6 +20,21 @@
         <port>9105</port>
     </properties>
 
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <port>9105</port>
+            </properties>
+        </profile>
+        <profile>
+            <id>pro</id>
+            <properties>
+                <port>9205</port>
+            </properties>
+        </profile>
+    </profiles>
+
     <build>
         <plugins>
             <plugin>
